@@ -46,17 +46,21 @@ generate = txt1.button('    Generate    ')
 
 
 if generate:
-    text_box.write('##### Loading Model ...')
-    G,z,c = load_model(model)
+    try:
+        text_box.write('##### 🤖 Loading Model ...')
+        G,z,c = load_model(model)
 
-    text_box.write('##### Generating New Design ...')
-    generated_img = generate_sneaker(G,z,c)
+        text_box.write('##### 🎨 Generating New Design ...')
+        generated_img = generate_sneaker(G,z,c)
 
-    text_box.write('')
+        text_box.write('')
 
-    text_box.markdown(get_image_download_link(generated_img), unsafe_allow_html=True)
+        text_box.markdown(get_image_download_link(generated_img), unsafe_allow_html=True)
 
-    st.image(generated_img)
+        st.image(generated_img)
+    except:
+        text_box.write('oops! Please Generate again')
+        pass
 
 
 
