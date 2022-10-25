@@ -13,14 +13,14 @@ st.title('Generate New Sneaker Designs')
 model= './saved_model/network-snapshot-004000.pkl'
 
 
+@st.cache(allow_output_mutation=True)
 def load_model(model_path):
 
     with open(model_path, 'rb') as f:
         G = pickle.load(f)['G_ema']  # torch.nn.Module
-        z = torch.randn([1, G.z_dim])  # latent codes
-        c = None  # class labels (not used in this example)
+
         G.forward = functools.partial(G.forward, force_fp32=True)
-        return G,z,c
+        return G
 
 
 def generate_sneaker(generator, latent_space, class_label):
@@ -48,7 +48,10 @@ generate = txt1.button('    Generate    ')
 if generate:
     try:
         text_box.write('##### 🤖 Loading Model ...')
-        G,z,c = load_model(model)
+
+        G = load_model(model)
+        z = torch.randn([1, G.z_dim])  # latent codes
+        c = None  # class labels (not used in this example)
 
         text_box.write('##### 🎨 Generating New Design ...')
         generated_img = generate_sneaker(G,z,c)
@@ -61,7 +64,6 @@ if generate:
     except:
         text_box.write('oops! Please Generate again')
         pass
-
 
 
 
